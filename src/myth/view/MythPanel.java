@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import myth.controller.MythController;
+import myth.model.MythicalCreature;
 import myth.model.Unicorn;
 
 public class MythPanel extends JPanel
@@ -24,12 +25,12 @@ public class MythPanel extends JPanel
 	private JButton makeButton;
 	private JTextField text;
 	private SpringLayout baseLayout;
-	private Unicorn unicorn;
+	private MythicalCreature creature;
 
 	public MythPanel(MythController baseController)
 	{
 		this.baseController = baseController;
-		
+		creature = new Unicorn();
 		setupPanel();
 		setupLayout();
 		setupListeners();
@@ -83,8 +84,8 @@ public class MythPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent click)
 			{
-				int randomDrop = (int) (Math.random() * unicorn.spoils().size());
-				text.setText(unicorn.spoils().get(randomDrop));
+				int randomDrop = (int) (Math.random() * creature.spoils().size());
+				text.setText(creature.spoils().get(randomDrop));
 
 			}
 

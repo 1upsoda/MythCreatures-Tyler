@@ -46,6 +46,7 @@ public class Unicorn implements MythicalCreature
 	public ArrayList<String> spoils()
 	{
 		ArrayList<String> drops = new ArrayList<String>();
+		drops.clear();
 		String oldColorType = colorType;
 		if(oldColorType == "Undead")
 		{
