@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -23,7 +24,7 @@ public class MythPanel extends JPanel
 	private JButton evilButton;
 	private JButton killButton;
 	private JButton makeButton;
-	private JTextField text;
+	private JTextArea text;
 	private SpringLayout baseLayout;
 	private MythicalCreature creature;
 
@@ -49,7 +50,7 @@ public class MythPanel extends JPanel
 		baseLayout.putConstraint(SpringLayout.NORTH, killButton, 0, SpringLayout.SOUTH, evilButton);
 		makeButton = new JButton("Instantiate a new beast");
 		baseLayout.putConstraint(SpringLayout.NORTH, makeButton, 0, SpringLayout.SOUTH, killButton);
-		text = new JTextField("COPYRIGHT LOLOLOL");
+		text = new JTextArea("COPYRIGHT LOLOLOL");
 		baseLayout.putConstraint(SpringLayout.NORTH, magicButton, 0, SpringLayout.SOUTH, text);
 		this.add(magicButton);
 		this.add(helpButton);
@@ -84,11 +85,55 @@ public class MythPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent click)
 			{
-				int randomDrop = (int) (Math.random() * creature.spoils().size());
-				text.setText(creature.spoils().get(randomDrop));
-
+				ArrayList<String> spoilsList = creature.spoils();
+				int randomDrop = (int) (Math.random() * spoilsList.size());
+				displayToUser("You brutally murder the Unicorn (for some reason) and it drops " + spoilsList.get(randomDrop));
+				if(((Unicorn) creature).getColorType() != "Undead")
+				{
+					displayToUser("Now that the Unicorn has been killed, it is using Undead Magics");
+				}
+				((Unicorn) creature).setColorType("Undead");
 			}
 
 		});
+		helpButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				displayToUser(creature.helpfulness());
+				if(((Unicorn) creature).getColorType() != "Light")
+				{
+					displayToUser("Now that the Unicorn has been helpful, Light Magics have returned to it");
+				}
+				((Unicorn) creature).setColorType("Light");
+			}
+
+		});
+		magicButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				displayToUser(creature.magic(((Unicorn) creature).getColorType()));
+			}
+
+		});
+		evilButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				displayToUser(creature.mischievousness());
+				if(((Unicorn) creature).getColorType() != "Entropy")
+				{
+					displayToUser("Now that the Unicorn has been a little mysterious, the Magics of Entropy have infused inside of it.");
+				}
+				((Unicorn) creature).setColorType("Entropy");
+			}
+
+		});
+	}
+	
+	public void displayToUser(String output)
+	{
+		text.append("\n" + output);
 	}
 }

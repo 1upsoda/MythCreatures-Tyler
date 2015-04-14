@@ -29,17 +29,48 @@ public class Unicorn implements MythicalCreature
 	@Override
 	public String helpfulness()
 	{
-		
-		setColorType("Light");
-		return null;
+		String helpSentence = "";
+		if(colorType == "Light")
+		{
+			helpSentence = "I can help you with anything, in fact, I have already helped you with what you needed...";
+		}
+		else if(colorType == "Entropy")
+		{
+			int randomNess = (int) (Math.random()*4);
+			switch(randomNess)
+			{
+				case 0:helpSentence = "Sure I can help you with anything.";break;
+				case 1:helpSentence = "Eh, I don't really want to but I kinda do...";break;
+				case 2:helpSentence = "Nope, you suck.";break;
+				case 3:helpSentence = "Sausage.";break;
+			}
+		}
+		else if(colorType == "Undead")
+		{
+			helpSentence = "No, you have killed me.";
+		}
+//		setColorType("Light");
+		return helpSentence;
 	}
 
 	@Override
-	public int mischievousness()
+	public String mischievousness()
 	{
-		
-		setColorType("Entropy");
-		return 0;
+		String misLevel = "";
+		if(colorType == "Light")
+		{
+			misLevel = "I am not going to pull a prank, as I am an honorable Unicorn";
+		}
+		else if(colorType == "Undead")
+		{
+			misLevel = "I am too dead to pull any pranks at the moment";
+		}
+		else if(colorType == "Entropy")
+		{
+			misLevel = "Maybe I already have.... '-' ";
+		}
+//		setColorType("Entropy");
+		return misLevel;
 	}
 
 	@Override
@@ -64,13 +95,13 @@ public class Unicorn implements MythicalCreature
 		{
 			drops.add("A Lighter");
 			drops.add("Some Lint");
-			drops.add("''British Sponge Pudding''");
+			drops.add("\"British Sponge Pudding\"");
 		}
 		else
 		{
 			drops.add("nothing");
 		}
-		setColorType("Undead");
+//		setColorType("Undead");
 		return drops;
 	}
 

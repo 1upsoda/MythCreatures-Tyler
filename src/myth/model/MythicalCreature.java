@@ -14,7 +14,7 @@ public interface MythicalCreature
 	
 	public String helpfulness();
 	
-	public int mischievousness();
+	public String mischievousness();
 	
 	public ArrayList<String> spoils();
 	
