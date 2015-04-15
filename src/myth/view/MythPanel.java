@@ -32,6 +32,7 @@ public class MythPanel extends JPanel
 	private MythicalCreature creature;
 	private String[] creaturesList = {"Unicorn", "Kitsune"};
 	private String currentCreature;
+	private boolean death = false;
 
 	public MythPanel(MythController baseController)
 	{
@@ -57,10 +58,13 @@ public class MythPanel extends JPanel
 		{
 			creature = new Kitsune();
 			currentCreature = "Kitsune";
+			death = false;
 		}
 		else if(creaturesList[n] == "Unicorn")
 		{
 			creature = new Unicorn();
+			currentCreature = "Unicorn";
+			death = false;
 		}
 		text.setText("A " + creaturesList[n] + " slowly approaches you");
 	}
@@ -115,22 +119,30 @@ public class MythPanel extends JPanel
 			{
 				ArrayList<String> spoilsList = creature.spoils();
 				int randomDrop = (int) (Math.random() * spoilsList.size());
-				if(currentCreature != "Dead" )
+				if(!death || currentCreature=="Unicorn")
 				{
-					displayToUser("You brutally murder the Creature (for some reason) and it drops " + spoilsList.get(randomDrop));
+					displayToUser("You brutally murder the " +currentCreature+ " (for some reason) and it drops " + spoilsList.get(randomDrop));
+					if(currentCreature == "Unicorn")
+					{
 					if(((Unicorn) creature).getColorType() != "Undead")
 					{
 						displayToUser("Now that the Unicorn has been killed, it is using Undead Magics");
 					}
 					((Unicorn) creature).setColorType("Undead");
+					}
+					if(currentCreature == "Kitsune")
+					{
 					displayToUser("The " +currentCreature+ " is dead now");
+					}
+					death = true;
 					
 				}
-				if(currentCreature == "Dead")
+				if(death && currentCreature!="Unicorn")
 				{
-					displayToUser("The Creature is dead...");
+					displayToUser("The " +currentCreature+ " is dead...");
 				}
-				currentCreature = "Dead";
+				
+				;
 			}
 
 		});
@@ -138,18 +150,24 @@ public class MythPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent click)
 			{
+				if(death && currentCreature != "Unicorn")
+				{
+					displayToUser("The " +currentCreature+ " is dead...");
+				}
+				else
+				{
 				displayToUser(creature.helpfulness());
 				if(currentCreature == "Unicorn")
 				{
-					if(((Unicorn) creature).getColorType() != "Light" && currentCreature == "Unicorn")
+					if(((Unicorn) creature).getColorType() != "Light")
 					{
 						displayToUser("Now that the Unicorn has been helpful, Light Magics have returned to it");
 					}
 					
 					((Unicorn) creature).setColorType("Light");
-					currentCreature = "Unicorn";
+					;
 				}
-				
+				}
 			}
 
 		});
@@ -157,7 +175,21 @@ public class MythPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent click)
 			{
+				if(death && currentCreature != "Unicorn")
+				{
+					displayToUser("The " +currentCreature+ " is dead...");
+				}
+				else
+				{
+				if(currentCreature == "Unicorn")
+				{
 				displayToUser(creature.magic(((Unicorn) creature).getColorType()));
+				}
+				else
+				{
+					displayToUser(creature.magic("Chocolate"));
+				}
+				}
 			}
 
 		});
@@ -173,12 +205,22 @@ public class MythPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent click)
 			{
+				if(death && currentCreature != "Unicorn")
+				{
+					displayToUser("The " +currentCreature+ " is dead...");
+				}
+				else
+				{
 				displayToUser(creature.mischievousness());
+				if(currentCreature == "Unicorn")
+				{
 				if(((Unicorn) creature).getColorType() != "Entropy")
 				{
 					displayToUser("Now that the Unicorn has been a little mysterious, the Magics of Entropy have infused inside of it.");
 				}
 				((Unicorn) creature).setColorType("Entropy");
+				}
+				}
 			}
 
 		});
