@@ -5,14 +5,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import myth.controller.MythController;
+import myth.model.Kitsune;
 import myth.model.MythicalCreature;
 import myth.model.Unicorn;
 
@@ -27,6 +30,8 @@ public class MythPanel extends JPanel
 	private JTextArea text;
 	private SpringLayout baseLayout;
 	private MythicalCreature creature;
+	private String[] creaturesList = {"Unicorn", "Kitsune"};
+	private String currentCreature;
 
 	public MythPanel(MythController baseController)
 	{
@@ -37,6 +42,28 @@ public class MythPanel extends JPanel
 		setupListeners();
 	}
 
+	public void setupJPanel()
+	{
+
+		int n = JOptionPane.showOptionDialog(null,
+		    "Which animal do you want to talk about?",
+		    "Choose a creature",
+		    JOptionPane.DEFAULT_OPTION,
+		    JOptionPane.QUESTION_MESSAGE,
+		    null,
+		    creaturesList,
+		    creaturesList[0]);
+		if(creaturesList[n] == "Kitsune")
+		{
+			creature = new Kitsune();
+			currentCreature = "Kitsune";
+		}
+		else if(creaturesList[n] == "Unicorn")
+		{
+			creature = new Unicorn();
+		}
+		text.setText("A " + creaturesList[n] + " slowly approaches you");
+	}
 	public void setupPanel()
 	{
 		baseLayout = new SpringLayout();
@@ -50,7 +77,7 @@ public class MythPanel extends JPanel
 		baseLayout.putConstraint(SpringLayout.NORTH, killButton, 0, SpringLayout.SOUTH, evilButton);
 		makeButton = new JButton("Instantiate a new beast");
 		baseLayout.putConstraint(SpringLayout.NORTH, makeButton, 0, SpringLayout.SOUTH, killButton);
-		text = new JTextArea("COPYRIGHT LOLOLOL");
+		text = new JTextArea("A beautiful Unicorn approaches...");
 		baseLayout.putConstraint(SpringLayout.NORTH, magicButton, 0, SpringLayout.SOUTH, text);
 		this.add(magicButton);
 		this.add(helpButton);
@@ -59,6 +86,7 @@ public class MythPanel extends JPanel
 		this.add(makeButton);
 		this.add(text);
 		text.setEditable(false);
+		currentCreature = "Unicorn";
 	}
 
 	public void setupLayout()
@@ -87,12 +115,22 @@ public class MythPanel extends JPanel
 			{
 				ArrayList<String> spoilsList = creature.spoils();
 				int randomDrop = (int) (Math.random() * spoilsList.size());
-				displayToUser("You brutally murder the Unicorn (for some reason) and it drops " + spoilsList.get(randomDrop));
-				if(((Unicorn) creature).getColorType() != "Undead")
+				if(currentCreature != "Dead" )
 				{
-					displayToUser("Now that the Unicorn has been killed, it is using Undead Magics");
+					displayToUser("You brutally murder the Creature (for some reason) and it drops " + spoilsList.get(randomDrop));
+					if(((Unicorn) creature).getColorType() != "Undead")
+					{
+						displayToUser("Now that the Unicorn has been killed, it is using Undead Magics");
+					}
+					((Unicorn) creature).setColorType("Undead");
+					displayToUser("The " +currentCreature+ " is dead now");
+					
 				}
-				((Unicorn) creature).setColorType("Undead");
+				if(currentCreature == "Dead")
+				{
+					displayToUser("The Creature is dead...");
+				}
+				currentCreature = "Dead";
 			}
 
 		});
@@ -101,11 +139,17 @@ public class MythPanel extends JPanel
 			public void actionPerformed(ActionEvent click)
 			{
 				displayToUser(creature.helpfulness());
-				if(((Unicorn) creature).getColorType() != "Light")
+				if(currentCreature == "Unicorn")
 				{
-					displayToUser("Now that the Unicorn has been helpful, Light Magics have returned to it");
+					if(((Unicorn) creature).getColorType() != "Light" && currentCreature == "Unicorn")
+					{
+						displayToUser("Now that the Unicorn has been helpful, Light Magics have returned to it");
+					}
+					
+					((Unicorn) creature).setColorType("Light");
+					currentCreature = "Unicorn";
 				}
-				((Unicorn) creature).setColorType("Light");
+				
 			}
 
 		});
@@ -114,6 +158,14 @@ public class MythPanel extends JPanel
 			public void actionPerformed(ActionEvent click)
 			{
 				displayToUser(creature.magic(((Unicorn) creature).getColorType()));
+			}
+
+		});
+		makeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				setupJPanel();
 			}
 
 		});
